@@ -2,10 +2,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.akexorcist.googledirection.sample">
 
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <uses-feature
         android:glEsVersion="0x00020000"
@@ -26,16 +28,21 @@
         </activity>
 
         <activity
-            android:name=".SimpleDirectionActivity"
-            android:label="@string/simple_direction" />
+            android:name=".DrivingDirectionActivity"
+            android:label="@string/driving_direction" />
 
         <activity
             android:name=".TransitDirectionActivity"
             android:label="@string/transit_direction" />
 
         <activity
-            android:name=".AlternativeDirectionActivity"
-            android:label="@string/alternative_direction" />
+            android:name=".WalkingDirectionActivity"
+            android:label="@string/walking_direction" />
+
+        <activity
+            android:name=".BicyclingDirectionActivity"
+            android:label="@string/bicyling_direction" />
+
 
         <meta-data
             android:name="com.google.android.gms.version"
@@ -43,7 +50,7 @@
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="YOUR_API_KEY" />
+            android:value="AIzaSyBpGWIVd-p0-V5sTcQQnlnGcGNGKoMNesM" />
 
     </application>
 

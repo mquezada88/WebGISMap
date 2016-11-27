@@ -25,6 +25,7 @@ import com.akexorcist.googledirection.model.Step;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.PolylineOptions;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -110,8 +111,9 @@ public class DirectionConverter {
         return rectLine;
     }
 
-    public static ArrayList<PolylineOptions> createTransitPolyline(Context context, List<Step> stepList, int transitWidth, int transitColor, int walkingWidth, int walkingColor) {
+    public static ArrayList<PolylineOptions> createTransitPolyline(Context context, List<Step> stepList, int transitWidth, int walkingWidth, int walkingColor) {
         ArrayList<PolylineOptions> polylineOptionsList = new ArrayList<>();
+        //stepList.get(0).getTransitDetail().getLine().getColor().toString();
         if (stepList != null && stepList.size() > 0) {
             for (Step step : stepList) {
                 ArrayList<LatLng> directionPointList = new ArrayList<>();
@@ -119,11 +121,26 @@ public class DirectionConverter {
                 if (step.isContainStepList()) {
                     polylineOptionsList.add(createPolyline(context, directionPointList, walkingWidth, walkingColor));
                 } else {
-                    polylineOptionsList.add(createPolyline(context, directionPointList, transitWidth, transitColor));
+                    polylineOptionsList.add(createPolyline(context, directionPointList, transitWidth, parseColor(step.getTransitDetail().getLine().getColor())));
                 }
             }
         }
         return polylineOptionsList;
+    }
+
+    private static int parseColor(String colorString) {
+        if (colorString.charAt(0) == '#') {
+            // Use a long to avoid rollovers on #ffXXXXXX
+            long color = Long.parseLong(colorString.substring(1), 16);
+            if (colorString.length() == 7) {
+                // Set the alpha value
+                color |= 0x00000000ff000000;
+            } else if (colorString.length() != 9) {
+                throw new IllegalArgumentException("Unknown color");
+            }
+            return (int)color;
+        }
+        throw new IllegalArgumentException("Unknown color");
     }
 
     private static int dpToPx(Context context, int dp) {

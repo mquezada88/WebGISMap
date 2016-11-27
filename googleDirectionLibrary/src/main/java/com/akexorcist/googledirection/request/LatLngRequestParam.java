@@ -18,14 +18,12 @@ limitations under the License.
 
 package com.akexorcist.googledirection.request;
 
-import com.google.android.gms.maps.model.LatLng;
-
 /**
  * Created by Akexorcist on 11/29/15 AD.
  */
-public class DirectionRequestParam {
-    LatLng origin;
-    LatLng destination;
+public class LatLngRequestParam {
+    String origin;
+    String destination;
     String transportMode;
     String departureTime;
     String language;
@@ -36,23 +34,25 @@ public class DirectionRequestParam {
     String apiKey;
 
 
-    public LatLng getOrigin() {
+    public String getOrigin() {
         return origin;
     }
 
-    public DirectionRequestParam setOrigin(LatLng origin) {
+    public LatLngRequestParam setOrigin(String origin) {
         this.origin = origin;
         return this;
     }
 
-    public LatLng getDestination() {
+    public String getDestination() {
         return destination;
     }
 
-    public DirectionRequestParam setDestination(LatLng destination) {
+    public LatLngRequestParam setDestination(String destination) {
         this.destination = destination;
         return this;
     }
+
+    public boolean getSensor(){return true;}
 
     public String getTransportMode() {
         return transportMode;
@@ -114,7 +114,7 @@ public class DirectionRequestParam {
         this.departureTime = departureTime;
     }
 
-    public DirectionRequestParam setApiKey(String apiKey) {
+    public LatLngRequestParam setApiKey(String apiKey) {
         this.apiKey = apiKey;
         return this;
     }

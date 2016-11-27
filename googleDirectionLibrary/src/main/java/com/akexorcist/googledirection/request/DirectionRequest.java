@@ -21,21 +21,17 @@ package com.akexorcist.googledirection.request;
 import com.akexorcist.googledirection.DirectionCallback;
 import com.akexorcist.googledirection.model.Direction;
 import com.akexorcist.googledirection.network.DirectionAndPlaceConnection;
-import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-/**
- * Created by Akexorcist on 11/29/15 AD.
- */
 public class DirectionRequest {
-    protected DirectionRequestParam param;
+    protected LatLngRequestParam param;
 
-    public DirectionRequest(String apiKey, LatLng origin, LatLng destination) {
-        param = new DirectionRequestParam().setApiKey(apiKey).setOrigin(origin).setDestination(destination);
+    public DirectionRequest(String apiKey, String origin, String destination) {
+        param = new LatLngRequestParam().setApiKey(apiKey).setOrigin(origin).setDestination(destination);
     }
 
     public DirectionRequest transportMode(String transportMode) {
@@ -90,10 +86,11 @@ public class DirectionRequest {
     public void execute(final DirectionCallback callback) {
         Call<Direction> direction = DirectionAndPlaceConnection.getInstance()
                 .createService()
-                .getDirection(param.getOrigin().latitude + "," + param.getOrigin().longitude,
-                        param.getDestination().latitude + "," + param.getDestination().longitude,
+                .getDirection(param.getOrigin(),
+                        param.getDestination(),
                         param.getTransportMode(),
                         param.getDepartureTime(),
+                        param.getSensor(),
                         param.getLanguage(),
                         param.getUnit(),
                         param.getAvoid(),

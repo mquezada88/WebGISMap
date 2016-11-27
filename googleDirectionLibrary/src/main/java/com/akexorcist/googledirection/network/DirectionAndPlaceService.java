@@ -35,6 +35,7 @@ public interface DirectionAndPlaceService {
                                  @Query("destination") String destination,
                                  @Query("mode") String transportMode,
                                  @Query("departure_time") String departureTime,
+                                 @Query("sensor") boolean sensor,
                                  @Query("language") String language,
                                  @Query("units") String units,
                                  @Query("avoid") String avoid,

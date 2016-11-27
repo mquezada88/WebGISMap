@@ -1,14 +1,9 @@
 package com.akexorcist.googledirection.sample;
 
-import android.Manifest;
-import android.content.pm.PackageManager;
 import android.graphics.Color;
-import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.view.View;
 import android.widget.AdapterView;
@@ -32,7 +27,6 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
@@ -40,9 +34,7 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TransitDirectionActivity extends AppCompatActivity implements OnMapReadyCallback,
-        View.OnClickListener, DirectionCallback, LatLngCallback {
-
+public class DrivingDirectionActivity extends AppCompatActivity implements OnMapReadyCallback, View.OnClickListener, DirectionCallback, LatLngCallback {
     private ImageView btnRequestDirection;
     private GoogleMap googleMap;
     private CardView dirCard;
@@ -84,7 +76,7 @@ public class TransitDirectionActivity extends AppCompatActivity implements OnMap
                 // Get data associated with the specified position
                 // in the list (AdapterView)
                 String description = (String) parent.getItemAtPosition(position);
-                Toast.makeText(TransitDirectionActivity.this, description, Toast.LENGTH_SHORT).show();
+                Toast.makeText(DrivingDirectionActivity.this, description, Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -96,19 +88,11 @@ public class TransitDirectionActivity extends AppCompatActivity implements OnMap
                 // Get data associated with the specified position
                 // in the list (AdapterView)
                 String description = (String) parent.getItemAtPosition(position);
-                Toast.makeText(TransitDirectionActivity.this, description, Toast.LENGTH_SHORT).show();
+                Toast.makeText(DrivingDirectionActivity.this, description, Toast.LENGTH_SHORT).show();
             }
         });
 
         ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).getMapAsync(this);
-    }
-
-    /**
-     * Displays a dialog with error message explaining that the location permission is missing.
-     */
-    private void showMissingPermissionError() {
-        PermissionUtils.PermissionDeniedDialog
-                .newInstance(true).show(getSupportFragmentManager(), "dialog");
     }
 
     @Override
@@ -156,39 +140,25 @@ public class TransitDirectionActivity extends AppCompatActivity implements OnMap
         GoogleDirection.withServerKey(directionsServerKey)
                 .from(orig)
                 .to(desti)
-                .transportMode(TransportMode.TRANSIT)
+                .transportMode(TransportMode.DRIVING)
                 .execute(this);
     }
 
 
     @Override
     public void onDirectionSuccess(Direction direction, String rawBody) {
-        Snackbar.make(btnRequestDirection, "Route Found. Status: " + direction.getStatus(), Snackbar.LENGTH_SHORT).show();
+        //-----
+        Snackbar.make(btnRequestDirection, "Success with status : " + direction.getStatus(), Snackbar.LENGTH_SHORT).show();
         if (direction.isOK()) {
-            googleMap.clear();
-
-            ArrayList<LatLng> sectionPositionList = direction.getRouteList().get(0).getLegList().get(0).getSectionPoint();
-
-            for(int i=0; i<sectionPositionList.size();i++){
-                if(i==0) {
-                    googleMap.addMarker(new MarkerOptions().position(sectionPositionList.get(i))
-                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
-                    googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(sectionPositionList.get(i), 14));
-                }
-                else if(i==sectionPositionList.size()-1)
-                    googleMap.addMarker(new MarkerOptions().position(sectionPositionList.get(i))
-                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)));
-                else
-                    googleMap.addMarker(new MarkerOptions().position(sectionPositionList.get(i))
-                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN)));
-            }
-
-            List<Step> stepList = direction.getRouteList().get(0).getLegList().get(0).getStepList();
-            ArrayList<PolylineOptions> polylineOptionList = DirectionConverter.createTransitPolyline(this, stepList, 5, 3, Color.BLUE);
-            for (PolylineOptions polylineOption : polylineOptionList) {
-                googleMap.addPolyline(polylineOption);
-            }
+            ArrayList<LatLng> directionPositionList = direction.getRouteList().get(0).getLegList().get(0).getDirectionPoint();
+            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(directionPositionList.get(0), 14));
+            googleMap.addMarker(new MarkerOptions().position(directionPositionList.get(0))
+                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+            googleMap.addMarker(new MarkerOptions().position(directionPositionList.get(directionPositionList.size()-1))
+                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)));
+            googleMap.addPolyline(DirectionConverter.createPolyline(this, directionPositionList, 5, Color.BLUE));
         }
+
     }
 
     @Override
@@ -211,3 +181,4 @@ public class TransitDirectionActivity extends AppCompatActivity implements OnMap
     }
 
 }
+

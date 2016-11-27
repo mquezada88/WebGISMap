@@ -30,7 +30,7 @@ public class DirectionOriginRequest {
         this.apiKey = apiKey;
     }
 
-    public DirectionDestinationRequest from(LatLng origin) {
+    public DirectionDestinationRequest from(String origin) {
         return new DirectionDestinationRequest(apiKey, origin);
     }
 }

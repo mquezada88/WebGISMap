@@ -19,29 +19,30 @@ limitations under the License.
 package com.akexorcist.googledirection.network;
 
 import com.akexorcist.googledirection.constant.DirectionUrl;
+import com.akexorcist.googledirection.constant.LatLngUrl;
 
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class DirectionAndPlaceConnection {
-    private static DirectionAndPlaceConnection connection;
+public class LatLngConnection {
+    private static LatLngConnection connection;
 
-    public static DirectionAndPlaceConnection getInstance() {
+    public static LatLngConnection getInstance() {
         if (connection == null) {
-            connection = new DirectionAndPlaceConnection();
+            connection = new LatLngConnection();
         }
         return connection;
     }
 
-    private DirectionAndPlaceService service;
+    private LatLngService service;
 
-    public DirectionAndPlaceService createService() {
+    public LatLngService createService() {
         if (service == null) {
             Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(DirectionUrl.MAPS_API_URL)
+                    .baseUrl(LatLngUrl.LATLNG_API_URL)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
-            service = retrofit.create(DirectionAndPlaceService.class);
+            service = retrofit.create(LatLngService.class);
         }
         return service;
     }

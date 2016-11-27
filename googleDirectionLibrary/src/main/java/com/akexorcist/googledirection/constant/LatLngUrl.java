@@ -16,21 +16,13 @@ limitations under the License.
 
 */
 
-package com.akexorcist.googledirection.request;
+package com.akexorcist.googledirection.constant;
 
-import com.google.android.gms.maps.model.LatLng;
+/**
+ * Created by Akexorcist on 11/29/15 AD.
+ */
+public class LatLngUrl {
+    public static final String LATLNG_API_URL = "https://maps.googleapis.com/maps/api/";
+    public static final String LATLNG_GEOCODE_URL = "geocode/json";
 
-
-public class DirectionDestinationRequest {
-    String apiKey;
-    String origin;
-
-    public DirectionDestinationRequest(String apiKey, String origin) {
-        this.apiKey = apiKey;
-        this.origin = origin;
-    }
-
-    public DirectionRequest to(String destination) {
-        return new DirectionRequest(apiKey, origin, destination);
-    }
 }
