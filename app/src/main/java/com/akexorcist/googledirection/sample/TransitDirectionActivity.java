@@ -37,7 +37,15 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 
+import com.google.maps.android.geojson.GeoJsonFeature;
+import com.google.maps.android.geojson.GeoJsonLayer;
+import com.google.maps.android.geojson.GeoJsonPointStyle;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+import android.util.Log;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -58,6 +66,9 @@ public class TransitDirectionActivity extends AppCompatActivity implements OnMap
     private AutoCompleteTextView dest;
     private AutoCompleteTextView autocompleteViewDest;
     private AutoCompleteTextView autocompleteViewOrigin;
+
+    private final static String mLogTag = "GeoJson";
+    private GoogleMap mMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,6 +113,7 @@ public class TransitDirectionActivity extends AppCompatActivity implements OnMap
         });
 
         ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).getMapAsync(this);
+
     }
 
     /**
@@ -159,6 +171,7 @@ public class TransitDirectionActivity extends AppCompatActivity implements OnMap
                 .to(desti)
                 .transportMode(TransportMode.TRANSIT)
                 .execute(this);
+
     }
 
 
@@ -189,6 +202,15 @@ public class TransitDirectionActivity extends AppCompatActivity implements OnMap
             for (PolylineOptions polylineOption : polylineOptionList) {
                 googleMap.addPolyline(polylineOption);
             }
+            try {
+                GeoJsonLayer layer = new GeoJsonLayer(getMap(), R.raw.hotspotlocations, getApplicationContext());
+                layer.addLayerToMap();
+                //addGeoJsonLayerToMap(layer);
+            } catch (IOException e) {
+                Log.e(mLogTag, "GeoJSON file could not be read");
+            } catch (JSONException e) {
+                Log.e(mLogTag, "GeoJSON file could not be converted to a JSONObject");
+            }
         }
     }
 
@@ -209,6 +231,9 @@ public class TransitDirectionActivity extends AppCompatActivity implements OnMap
     @Override
     public void onLatLngFailure(Throwable t) {
         Snackbar.make(btnRequestDirection, t.getMessage(), Snackbar.LENGTH_SHORT).show();
+    }
+    protected GoogleMap getMap() {
+        return mMap = googleMap;
     }
 
 }
