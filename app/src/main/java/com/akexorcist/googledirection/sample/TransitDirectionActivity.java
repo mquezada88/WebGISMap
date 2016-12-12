@@ -205,7 +205,15 @@ public class TransitDirectionActivity extends AppCompatActivity implements OnMap
             try {
                 GeoJsonLayer layer = new GeoJsonLayer(getMap(), R.raw.hotspotlocations, getApplicationContext());
                 layer.addLayerToMap();
-                //addGeoJsonLayerToMap(layer);
+                // Demonstrate receiving features via GeoJsonLayer clicks.
+                layer.setOnFeatureClickListener(new GeoJsonLayer.GeoJsonOnFeatureClickListener() {
+                    @Override
+                    public void onFeatureClick(GeoJsonFeature feature) {
+                        Toast.makeText(TransitDirectionActivity.this,
+                                "Feature clicked: " + feature.getProperty("ssid"),
+                                Toast.LENGTH_SHORT).show();
+                    }
+                });
             } catch (IOException e) {
                 Log.e(mLogTag, "GeoJSON file could not be read");
             } catch (JSONException e) {
